@@ -1,0 +1,41 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <StarcounterVersionCompatibility>2.4</StarcounterVersionCompatibility>
+    <Platform>x64</Platform>
+    <Platforms>x64</Platforms>
+    <!-- .NET Framework doesn't display source information if portable pdb (the default) is used. See https://github.com/Microsoft/dotnet/blob/master/releases/net471/KnownIssues/517815-BCL%20Stack%20traces%20are%20missing%20source%20information%20for%20frames%20with%20debug%20information%20in%20the%20Portable%20PDB%20format.md  -->
+    <DebugType Condition="'$(Configuration)' == 'Debug'">full</DebugType>
+    <OutputPath>bin\$(Configuration)</OutputPath>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <TargetFramework>net462</TargetFramework>
+    <AssemblyName>Starcounter.Validation.Tests</AssemblyName>
+    <RootNamespace>Starcounter.Validation.Tests</RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="FluentAssertions" Version="5.2.0" />
+    <PackageReference Include="Moq" Version="4.8.1" />
+    <PackageReference Include="NUnit" Version="3.5.0" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.7.0" />
+    <PackageReference Include="NUnit.Console" Version="3.8.0" />
+    <PackageReference Include="NUnit3TestAdapter" Version="3.10.0" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Starcounter.Validation\Starcounter.Validation.csproj" />
+   <Reference Include="Starcounter, Version=2.0.0.0, Culture=neutral, PublicKeyToken=d2df1e81d0ca3abf">
+     <HintPath>$(StarcounterBin)\Starcounter.dll</HintPath>
+   </Reference>
+   <Reference Include="Starcounter.ErrorCodes">
+     <HintPath>$(StarcounterBin)\Starcounter.ErrorCodes.dll</HintPath>
+   </Reference>
+   <Reference Include="Starcounter.XSON, Version=2.0.0.0, Culture=neutral, PublicKeyToken=d2df1e81d0ca3abf">
+     <HintPath>$(StarcounterBin)\Starcounter.XSON.dll</HintPath>
+   </Reference>
+   <Reference Include="Starcounter.Internal, Version=2.0.0.0, Culture=neutral, PublicKeyToken=d2df1e81d0ca3abf">
+     <HintPath>$(StarcounterBin)\Starcounter.Internal.dll</HintPath>
+   </Reference>
+   <Reference Include="Starcounter.BindingInterfaces, Version=1.0.0.0, Culture=neutral, PublicKeyToken=d2df1e81d0ca3abf">
+     <HintPath>$(StarcounterBin)\Starcounter.BindingInterfaces.dll</HintPath>
+   </Reference>
+  </ItemGroup>
+</Project>

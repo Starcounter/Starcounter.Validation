@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.27703.2000
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Starcounter.Validation", "Starcounter.Validation\Starcounter.Validation.csproj", "{299EDD41-1A3F-45B7-B05B-E3177EEC5DA0}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Starcounter.Validation.Tests", "Starcounter.Validation.Tests\Starcounter.Validation.Tests.csproj", "{8E0C5B9F-6B1B-492E-B04A-10C858AC9CCF}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x64 = Debug|x64
+		Release|x64 = Release|x64
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{299EDD41-1A3F-45B7-B05B-E3177EEC5DA0}.Debug|x64.ActiveCfg = Debug|x64
+		{299EDD41-1A3F-45B7-B05B-E3177EEC5DA0}.Debug|x64.Build.0 = Debug|x64
+		{299EDD41-1A3F-45B7-B05B-E3177EEC5DA0}.Release|x64.ActiveCfg = Release|x64
+		{299EDD41-1A3F-45B7-B05B-E3177EEC5DA0}.Release|x64.Build.0 = Release|x64
+		{8E0C5B9F-6B1B-492E-B04A-10C858AC9CCF}.Debug|x64.ActiveCfg = Debug|x64
+		{8E0C5B9F-6B1B-492E-B04A-10C858AC9CCF}.Debug|x64.Build.0 = Debug|x64
+		{8E0C5B9F-6B1B-492E-B04A-10C858AC9CCF}.Release|x64.ActiveCfg = Release|x64
+		{8E0C5B9F-6B1B-492E-B04A-10C858AC9CCF}.Release|x64.Build.0 = Release|x64
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {1619A507-F905-4D4D-9B8C-95F9DE7771C1}
+	EndGlobalSection
+EndGlobal
