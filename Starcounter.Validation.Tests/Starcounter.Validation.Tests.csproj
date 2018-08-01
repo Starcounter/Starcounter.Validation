@@ -37,5 +37,6 @@
    <Reference Include="Starcounter.BindingInterfaces, Version=1.0.0.0, Culture=neutral, PublicKeyToken=d2df1e81d0ca3abf">
      <HintPath>$(StarcounterBin)\Starcounter.BindingInterfaces.dll</HintPath>
    </Reference>
+   <Reference Include="System.ComponentModel.DataAnnotations" />
   </ItemGroup>
 </Project>
