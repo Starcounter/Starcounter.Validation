@@ -12,20 +12,20 @@ namespace Starcounter.Validation
     {
         public delegate IValidatorBuilder ValidatorBuilderFactory(ValidatorBuilder.ValidatorBuildHandler onBuild);
 
-        private readonly ErrorPresenter _errorPresenter;
+        private readonly ValidationResultsPresenter _validationResultsPresenter;
         private readonly IDictionary<string, PropertyValidationData> _properties;
         private readonly List<IValidator> _subValidators = new List<IValidator>();
         private readonly object _viewModel;
         private readonly ValidatorBuilderFactory _validatorBuilderFactory;
 
-        public Validator(ErrorPresenter errorPresenter,
+        public Validator(ValidationResultsPresenter validationResultsPresenter,
             IDictionary<string, PropertyValidationData> properties,
             object viewModel,
             ValidatorBuilderFactory validatorBuilderFactory)
         {
             _validatorBuilderFactory = validatorBuilderFactory;
             _viewModel = viewModel;
-            _errorPresenter = errorPresenter;
+            _validationResultsPresenter = validationResultsPresenter;
             _properties = properties;
         }
 
@@ -84,7 +84,7 @@ namespace Starcounter.Validation
                     .Select(att => att.GetValidationResult(value, validationContext))
                     .Where(result => result != ValidationResult.Success)
                     .ToList();
-            _errorPresenter(propertyName, errors.Select(result => result.ErrorMessage));
+            _validationResultsPresenter(propertyName, errors.Select(result => result.ErrorMessage));
 
             return !errors.Any();
         }

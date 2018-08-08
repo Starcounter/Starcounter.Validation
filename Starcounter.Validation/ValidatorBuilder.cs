@@ -20,13 +20,13 @@ namespace Starcounter.Validation
         private static readonly MethodInfo CreateGetterMethodInfo =
             typeof(ValidatorBuilder)
                 .GetMethod(nameof(CreateGetter), BindingFlags.NonPublic | BindingFlags.Static);
-
+        
         private readonly IValidationAttributeAdapter _validationAttributeAdapter;
         private readonly ValidatorBuildHandler _validatorBuildHandler;
         private readonly IDictionary<string, Validator.PropertyValidationData> _properties = new Dictionary<string, Validator.PropertyValidationData>();
 
         private object _viewModel;
-        private ErrorPresenter _errorPresenter;
+        private ValidationResultsPresenter _validationResultsPresenter;
 
         /// <summary>
         /// Constructs a new instance of <see cref="ValidatorBuilder"/>.
@@ -96,9 +96,10 @@ namespace Starcounter.Validation
             return attributes.ToList();
         }
 
-        public IValidatorBuilder WithErrorPresenter(ErrorPresenter errorPresenter)
+        /// <inheritdoc />
+        public IValidatorBuilder WithResultsPresenter(ValidationResultsPresenter validationResultsPresenter)
         {
-            _errorPresenter = errorPresenter;
+            _validationResultsPresenter = validationResultsPresenter;
             return this;
         }
 
@@ -106,16 +107,16 @@ namespace Starcounter.Validation
 
         public IValidator Build()
         {
-            if (_errorPresenter == null)
+            if (_validationResultsPresenter == null)
             {
-                throw new InvalidOperationException(string.Format(Strings.ValidatorBuilder_ErrorPresenterMissing, nameof(WithErrorPresenter)));
+                throw new InvalidOperationException(string.Format(Strings.ValidatorBuilder_ResultsPresenterMissing, nameof(WithResultsPresenter)));
             }
             if (_viewModel == null)
             {
                 throw new InvalidOperationException(string.Format(Strings.ValidatorBuilder_ViewModelMissing, nameof(WithViewModel)));
             }
 
-            var validator = new Validator(_errorPresenter, _properties, _viewModel, CloneWithBuildHandler);
+            var validator = new Validator(_validationResultsPresenter, _properties, _viewModel, CloneWithBuildHandler);
             _validatorBuildHandler?.Invoke(validator);
             return validator;
         }

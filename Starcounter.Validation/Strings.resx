@@ -126,7 +126,7 @@
   <data name="ValidatorBuilder_PropertyGetterMissing" xml:space="preserve">
     <value>{0}.{1} has no public getter</value>
   </data>
-  <data name="ValidatorBuilder_ErrorPresenterMissing" xml:space="preserve">
+  <data name="ValidatorBuilder_ResultsPresenterMissing" xml:space="preserve">
     <value>Error presenter has not been set. Make sure to call {0} at least once</value>
   </data>
   <data name="ValidatorBuilder_ViewModelMissing" xml:space="preserve">

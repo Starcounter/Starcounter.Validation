@@ -10,14 +10,14 @@ namespace Starcounter.Validation.Tests
     {
         private ValidatorBuilder _builder;
         private TestViewModel _viewModel;
-        private ErrorPresenter _errorPresenter;
+        private ValidationResultsPresenter _validationResultsPresenter;
 
         [SetUp]
         public void SetUp()
         {
             _builder = new ValidatorBuilder();
             _viewModel = new TestViewModel();
-            _errorPresenter = ErrorPresenters.NullErrorPresenter;
+            _validationResultsPresenter = ValidationResultsPresenters.NullValidationResultsPresenter;
         }
 
         [Test]
@@ -25,7 +25,7 @@ namespace Starcounter.Validation.Tests
         {
             _builder
                 .WithViewModel(new object())
-                .WithErrorPresenter(ErrorPresenters.NullErrorPresenter)
+                .WithResultsPresenter(ValidationResultsPresenters.NullValidationResultsPresenter)
                 .Build()
                 .Should().NotBeNull();
         }
@@ -44,7 +44,7 @@ namespace Starcounter.Validation.Tests
         public void ThrowsIfViewModelHasNotBeenSet()
         {
             _builder
-                .Invoking(builder => builder.WithErrorPresenter(_errorPresenter).Build())
+                .Invoking(builder => builder.WithResultsPresenter(_validationResultsPresenter).Build())
                 .Should().Throw<InvalidOperationException>()
                 .WithMessage(string.Format(Strings.ValidatorBuilder_ViewModelMissing, nameof(IValidatorBuilder.WithViewModel)))
                 ;
@@ -56,7 +56,7 @@ namespace Starcounter.Validation.Tests
             _builder
                 .Invoking(builder => builder.WithViewModel(_viewModel).Build())
                 .Should().Throw<InvalidOperationException>()
-                .WithMessage(string.Format(Strings.ValidatorBuilder_ErrorPresenterMissing, nameof(IValidatorBuilder.WithErrorPresenter)))
+                .WithMessage(string.Format(Strings.ValidatorBuilder_ResultsPresenterMissing, nameof(IValidatorBuilder.WithResultsPresenter)))
                 ;
         }
 
@@ -106,7 +106,7 @@ namespace Starcounter.Validation.Tests
         private IValidatorBuilder PrepareBuilder()
         {
             return _builder
-                .WithErrorPresenter(_errorPresenter)
+                .WithResultsPresenter(_validationResultsPresenter)
                 .WithViewModel(_viewModel);
         }
 

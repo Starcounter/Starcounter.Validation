@@ -210,7 +210,7 @@ namespace Starcounter.Validation.Tests
         {
             return builder
                 .WithViewModel(_viewModel)
-                .WithErrorPresenter((name, errors) => _presentedErrors.Add(name, errors.ToList()))
+                .WithResultsPresenter((name, errors) => _presentedErrors.Add(name, errors.ToList()))
                 .AddProperty(nameof(TestViewModel.FirstName))
                 .AddProperty(nameof(TestViewModel.Email));
         }
@@ -219,7 +219,7 @@ namespace Starcounter.Validation.Tests
         {
             _subValidator = _validator.CreateSubValidatorBuilder()
                 .WithViewModel(_subViewModel)
-                .WithErrorPresenter((name, errors) => _presentedSubValidatorErrors.Add(name, errors.ToList()))
+                .WithResultsPresenter((name, errors) => _presentedSubValidatorErrors.Add(name, errors.ToList()))
                 .AddProperty(nameof(TestViewModel.FirstName))
                 .Build();
         }

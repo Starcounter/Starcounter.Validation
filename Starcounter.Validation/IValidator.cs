@@ -9,7 +9,7 @@ namespace Starcounter.Validation
     {
         /// <summary>
         /// Validate <paramref name="value"/>, with regard to attributes of <paramref name="propertyName"/>.
-        /// Any errors will be presented using associated <see cref="ErrorPresenter"/>.
+        /// Any errors will be presented using associated <see cref="ValidationResultsPresenter"/>.
         /// </summary>
         /// <param name="propertyName">The name of the property that is used as a source of validation attributes.
         /// It must be registered in <see cref="IValidatorBuilder"/> beforehand.</param>
@@ -21,7 +21,7 @@ namespace Starcounter.Validation
         /// <summary>
         /// Validate all of the properties registered in this validator, with regard to their current values.
         /// It also validates all of the properties of sub-validators.
-        /// Any errors will be presented using associated <see cref="ErrorPresenter"/>.
+        /// Any errors will be presented using associated <see cref="ValidationResultsPresenter"/>.
         /// </summary>
         /// <returns>true if all the properties passed validation.</returns>
         bool ValidateAll();

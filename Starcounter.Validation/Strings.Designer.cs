@@ -70,15 +70,6 @@ namespace Starcounter.Validation {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Error presenter has not been set. Make sure to call {0} at least once.
-        /// </summary>
-        public static string ValidatorBuilder_ErrorPresenterMissing {
-            get {
-                return ResourceManager.GetString("ValidatorBuilder_ErrorPresenterMissing", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Property {0} has already been added to this validator.
         /// </summary>
         public static string ValidatorBuilder_PropertyAlreadyAdded {
@@ -93,6 +84,15 @@ namespace Starcounter.Validation {
         public static string ValidatorBuilder_PropertyGetterMissing {
             get {
                 return ResourceManager.GetString("ValidatorBuilder_PropertyGetterMissing", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Error presenter has not been set. Make sure to call {0} at least once.
+        /// </summary>
+        public static string ValidatorBuilder_ResultsPresenterMissing {
+            get {
+                return ResourceManager.GetString("ValidatorBuilder_ResultsPresenterMissing", resourceCulture);
             }
         }
         
