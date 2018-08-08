@@ -56,6 +56,21 @@ namespace Starcounter.Validation.Tests
         }
 
         [Test]
+        public void ValidateHandlesAttributesUsingValidationContext()
+        {
+            // FirstName is Required
+            _viewModel.Password = "password";
+            var propertyName = nameof(TestViewModel.RepeatPassword);
+            var validationResult = _validator.Validate(propertyName, "repeat password");
+
+            using (new AssertionScope())
+            {
+                validationResult.Should().BeFalse();
+                AssertErrorsContain(propertyName, TestViewModel.RepeatPasswordErrorMessage);
+            }
+        }
+
+        [Test]
         public void ValidateReturnsErrorsFromMultipleAttributes()
         {
             // Email is MaxLength(10) and EmailAddress
@@ -212,6 +227,7 @@ namespace Starcounter.Validation.Tests
                 .WithViewModel(_viewModel)
                 .WithResultsPresenter((name, errors) => _presentedErrors.Add(name, errors.ToList()))
                 .AddProperty(nameof(TestViewModel.FirstName))
+                .AddProperty(nameof(TestViewModel.RepeatPassword))
                 .AddProperty(nameof(TestViewModel.Email));
         }
 

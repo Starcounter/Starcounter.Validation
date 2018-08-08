@@ -8,6 +8,7 @@ namespace Starcounter.Validation.Tests
         public const string FirstNameErrorMessage = nameof(FirstNameErrorMessage);
         public const string MaxLengthErrorMessage = nameof(MaxLengthErrorMessage);
         public const string EmailAddressErrorMessage = nameof(EmailAddressErrorMessage);
+        public const string RepeatPasswordErrorMessage = nameof(RepeatPasswordErrorMessage);
 
         [Required(ErrorMessage = FirstNameErrorMessage)]
         public string FirstName { get; set; }
@@ -21,7 +22,7 @@ namespace Starcounter.Validation.Tests
 
         public string Password { get; set; }
 
-        [Compare(nameof(Password))]
+        [Compare(nameof(Password), ErrorMessage = RepeatPasswordErrorMessage)]
         public string RepeatPassword { get; set; }
 
         public string WriteOnly
