@@ -27,6 +27,7 @@ namespace Starcounter.Validation
 
         private object _viewModel;
         private ValidationResultsPresenter _validationResultsPresenter;
+        private Type _viewModelType;
 
         /// <summary>
         /// Constructs a new instance of <see cref="ValidatorBuilder"/>.
@@ -52,6 +53,8 @@ namespace Starcounter.Validation
         public IValidatorBuilder WithViewModel(object viewModel)
         {
             _viewModel = viewModel;
+            // cache it here instead of evaluating each time AddProperty is called
+            _viewModelType = viewModel.GetType();
             return this;
         }
 
@@ -65,38 +68,31 @@ namespace Starcounter.Validation
                     string.Format(Strings.ValidatorBuilder_PropertyAlreadyAdded, propertyName));
             }
 
-            var viewModelType = _viewModel.GetType();
-            var property = viewModelType.GetProperty(propertyName);
+            var property = _viewModelType.GetProperty(propertyName);
             if (property == null)
             {
-                throw new InvalidOperationException(string.Format(Strings.ValidatorBuilder_ViewModelMissingProperty, _viewModel, propertyName));
+                throw new InvalidOperationException(string.Format(Strings.ValidatorBuilder_ViewModelMissingProperty,
+                    _viewModel, propertyName));
             }
 
             if (!property.CanRead)
             {
-                throw new InvalidOperationException(string.Format(Strings.ValidatorBuilder_PropertyGetterMissing, viewModelType, propertyName));
+                throw new InvalidOperationException(string.Format(Strings.ValidatorBuilder_PropertyGetterMissing,
+                    _viewModelType, propertyName));
             }
 
-            _properties[propertyName] = new Validator.PropertyValidationData()
+            var propertyData = new Validator.PropertyValidationData
             {
                 Attributes = GetValidationAttributesFromProperty(property),
-                Getter = (Func<object>)CreateGetterMethodInfo
-                        // CreateGetter has no generic constraints, so this should never fail
-                    .MakeGenericMethod(viewModelType, property.PropertyType)
-                    .Invoke(null, new[] { _viewModel, property })
+                Getter = (Func<object>) CreateGetterMethodInfo
+                    // CreateGetter has no generic constraints, so this should never fail
+                    .MakeGenericMethod(_viewModelType, property.PropertyType)
+                    .Invoke(null, new[] {_viewModel, property })
             };
 
-            return this;
-        }
+            _properties[propertyName] = propertyData;
 
-        private List<ValidationAttribute> GetValidationAttributesFromProperty(PropertyInfo property)
-        {
-            var attributes = property.GetCustomAttributes<ValidationAttribute>();
-            if (_validationAttributeAdapter != null)
-            {
-                attributes = attributes.Select(_validationAttributeAdapter.Adapt);
-            }
-            return attributes.ToList();
+            return this;
         }
 
         /// <inheritdoc />
@@ -123,7 +119,18 @@ namespace Starcounter.Validation
 
             var validator = new Validator(_validationResultsPresenter, _properties, _viewModel, CloneWithBuildHandler);
             _validatorBuildHandler?.Invoke(validator);
+
             return validator;
+        }
+
+        private List<ValidationAttribute> GetValidationAttributesFromProperty(PropertyInfo property)
+        {
+            var attributes = property.GetCustomAttributes<ValidationAttribute>();
+            if (_validationAttributeAdapter != null)
+            {
+                attributes = attributes.Select(original => _validationAttributeAdapter.Adapt(original));
+            }
+            return attributes.ToList();
         }
 
         private IValidatorBuilder CloneWithBuildHandler(ValidatorBuildHandler buildHandler)
@@ -131,8 +138,7 @@ namespace Starcounter.Validation
             return new ValidatorBuilder(_validationAttributeAdapter, buildHandler);
         }
 
-        private static Func<TProperty> CreateGetter<TViewModel, TProperty>(TViewModel viewModel,
-            PropertyInfo propertyInfo)
+        private static Func<TProperty> CreateGetter<TViewModel, TProperty>(TViewModel viewModel, PropertyInfo propertyInfo)
         {
             var rawGetter = (Func<TViewModel, TProperty>)propertyInfo.GetMethod.CreateDelegate(typeof(Func<TViewModel, TProperty>));
             return () => rawGetter(viewModel);
