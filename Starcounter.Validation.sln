@@ -7,6 +7,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Starcounter.Validation", "S
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Starcounter.Validation.Tests", "Starcounter.Validation.Tests\Starcounter.Validation.Tests.csproj", "{8E0C5B9F-6B1B-492E-B04A-10C858AC9CCF}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Starcounter.Validation.Uniform", "Starcounter.Validation.Uniform\Starcounter.Validation.Uniform.csproj", "{9584C33A-7B3F-47E1-825B-F10BED428225}"
+EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{4A411E45-3A8E-484E-ADF0-F1197946EF9E}"
 	ProjectSection(SolutionItems) = preProject
 		LICENSE = LICENSE
@@ -27,6 +29,10 @@ Global
 		{8E0C5B9F-6B1B-492E-B04A-10C858AC9CCF}.Debug|x64.Build.0 = Debug|x64
 		{8E0C5B9F-6B1B-492E-B04A-10C858AC9CCF}.Release|x64.ActiveCfg = Release|x64
 		{8E0C5B9F-6B1B-492E-B04A-10C858AC9CCF}.Release|x64.Build.0 = Release|x64
+		{9584C33A-7B3F-47E1-825B-F10BED428225}.Debug|x64.ActiveCfg = Debug|x64
+		{9584C33A-7B3F-47E1-825B-F10BED428225}.Debug|x64.Build.0 = Debug|x64
+		{9584C33A-7B3F-47E1-825B-F10BED428225}.Release|x64.ActiveCfg = Release|x64
+		{9584C33A-7B3F-47E1-825B-F10BED428225}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
