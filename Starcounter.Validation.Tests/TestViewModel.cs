@@ -27,7 +27,7 @@ namespace Starcounter.Validation.Tests
 
         public string WriteOnly
         {
-            set { throw new NotImplementedException(); }
+            set => throw new NotImplementedException();
         }
 
         protected string Protected { get; set; }

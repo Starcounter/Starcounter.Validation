@@ -1,7 +1,5 @@
 ﻿using System;
-using System.ComponentModel.DataAnnotations;
 using FluentAssertions;
-using Moq;
 using NUnit.Framework;
 
 namespace Starcounter.Validation.Tests

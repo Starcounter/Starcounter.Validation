@@ -44,7 +44,7 @@ namespace Starcounter.Validation
         IEnumerable<string> Properties { get; }
 
         /// <summary>
-        /// Builds the <see cref="IValidator"/>. If the <see cref="WithResultsPresenter"/> was never
+        /// Builds the <see cref="IValidator"/>. If the <see cref="WithResultsPresenter"/> was never 
         /// </summary>
         /// <returns>The new <see cref="IValidator"/> instance.</returns>
         /// <exception cref="InvalidOperationException"><see cref="WithResultsPresenter"/> or <see cref="WithViewModel"/> was never called.</exception>

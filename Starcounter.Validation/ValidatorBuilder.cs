@@ -37,22 +37,25 @@ namespace Starcounter.Validation
         }
 
         /// <summary>
-        /// Constructs a new instance of <see cref="ValidatorBuilder"/>. This constructor is meant to be used by <see cref="Validator.AddSubValidator"/>
+        /// Constructs a new instance of <see cref="ValidatorBuilder"/>. This constructor is not meant to be called directly by the app developer,
+        /// but rather be used by <see cref="Validator.AddSubValidator"/>
         /// </summary>
         /// <param name="validationAttributeAdapter">Used when scanning properties for <see cref="ValidationAttribute"/>. If this is null, no adaptation will occur.</param>
-        /// <param name="validatorBuildHandler">Called after <see cref="Build"/> is created.</param>
+        /// <param name="validatorBuildHandler">Called after <see cref="Build"/> is invoked.</param>
         public ValidatorBuilder(IValidationAttributeAdapter validationAttributeAdapter, ValidatorBuildHandler validatorBuildHandler)
         {
             _validationAttributeAdapter = validationAttributeAdapter;
             _validatorBuildHandler = validatorBuildHandler;
         }
 
+        /// <inheritdoc/>
         public IValidatorBuilder WithViewModel(object viewModel)
         {
             _viewModel = viewModel;
             return this;
         }
 
+        /// <inheritdoc />
         public IValidatorBuilder AddProperty(string propertyName)
         {
             if (propertyName == null) throw new ArgumentNullException(nameof(propertyName));
@@ -103,8 +106,10 @@ namespace Starcounter.Validation
             return this;
         }
 
+        /// <inheritdoc />
         public IEnumerable<string> Properties => _properties.Keys;
 
+        /// <inheritdoc />
         public IValidator Build()
         {
             if (_validationResultsPresenter == null)

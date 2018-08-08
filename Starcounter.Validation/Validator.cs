@@ -29,7 +29,7 @@ namespace Starcounter.Validation
             _properties = properties;
         }
 
-        /// <inheritdoc cref="IValidator.Validate"/>
+        /// <inheritdoc />
         public bool Validate(string propertyName, object value)
         {
             if (propertyName == null) throw new ArgumentNullException(nameof(propertyName));
@@ -46,7 +46,7 @@ namespace Starcounter.Validation
             return Validate(propertyName, value, attributes);
         }
 
-        /// <inheritdoc cref="IValidator.ValidateAll"/>
+        /// <inheritdoc />
         public bool ValidateAll()
         {
             var areAllPropertiesValid = true;
@@ -63,7 +63,7 @@ namespace Starcounter.Validation
             return areAllPropertiesValid;
         }
 
-        /// <inheritdoc cref="IValidator.CreateSubValidatorBuilder"/>
+        /// <inheritdoc />
         public IValidatorBuilder CreateSubValidatorBuilder()
         {
             return _validatorBuilderFactory(AddSubValidator);
