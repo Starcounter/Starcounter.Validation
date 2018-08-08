@@ -105,9 +105,4 @@ namespace Starcounter.Validation
             public Func<object> Getter { get; set; }
         }
     }
-
-    public interface IValidationAttributeAdapter
-    {
-        ValidationAttribute Adapt(ValidationAttribute original);
-    }
 }

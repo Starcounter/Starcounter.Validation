@@ -128,7 +128,7 @@ namespace Starcounter.Validation
             var attributes = property.GetCustomAttributes<ValidationAttribute>();
             if (_validationAttributeAdapter != null)
             {
-                attributes = attributes.Select(original => _validationAttributeAdapter.Adapt(original));
+                attributes = attributes.Select(original => _validationAttributeAdapter.Adapt(original, _viewModelType));
             }
             return attributes.ToList();
         }

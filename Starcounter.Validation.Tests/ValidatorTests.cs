@@ -197,8 +197,8 @@ namespace Starcounter.Validation.Tests
         private IValidationAttributeAdapter CreateAdapterReplacingErrorMessage(string newErrorMessage)
         {
             var adapterMock = new Mock<IValidationAttributeAdapter>();
-            adapterMock.Setup(adapter => adapter.Adapt(It.IsAny<ValidationAttribute>()))
-                .Returns((ValidationAttribute attribute) =>
+            adapterMock.Setup(adapter => adapter.Adapt(It.IsAny<ValidationAttribute>(), It.IsAny<Type>()))
+                .Returns((ValidationAttribute attribute, Type type) =>
                 {
                     attribute.ErrorMessage = newErrorMessage;
                     return attribute;
