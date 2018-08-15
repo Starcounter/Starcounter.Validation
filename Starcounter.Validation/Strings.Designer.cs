@@ -97,7 +97,7 @@ namespace Starcounter.Validation {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to View-model has not been set. Make sure to call {0} at least once.
+        ///   Looks up a localized string similar to View-model has not been set. Make sure to call {0} before adding properties.
         /// </summary>
         public static string ValidatorBuilder_ViewModelMissing {
             get {

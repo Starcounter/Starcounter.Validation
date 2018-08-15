@@ -52,7 +52,7 @@ namespace Starcounter.Validation
         /// <inheritdoc/>
         public IValidatorBuilder WithViewModel(object viewModel)
         {
-            _viewModel = viewModel;
+            _viewModel = viewModel ?? throw new ArgumentNullException(nameof(viewModel));
             // cache it here instead of evaluating each time AddProperty is called
             _viewModelType = viewModel.GetType();
             return this;
@@ -61,7 +61,16 @@ namespace Starcounter.Validation
         /// <inheritdoc />
         public IValidatorBuilder AddProperty(string propertyName)
         {
-            if (propertyName == null) throw new ArgumentNullException(nameof(propertyName));
+            if (propertyName == null)
+            {
+                throw new ArgumentNullException(nameof(propertyName));
+            }
+
+            if (_viewModel == null)
+            {
+                throw new InvalidOperationException(string.Format(Strings.ValidatorBuilder_ViewModelMissing, nameof(WithViewModel)));
+            }
+
             if (_properties.ContainsKey(propertyName))
             {
                 throw new InvalidOperationException(
@@ -111,10 +120,6 @@ namespace Starcounter.Validation
             if (_validationResultsPresenter == null)
             {
                 throw new InvalidOperationException(string.Format(Strings.ValidatorBuilder_ResultsPresenterMissing, nameof(WithResultsPresenter)));
-            }
-            if (_viewModel == null)
-            {
-                throw new InvalidOperationException(string.Format(Strings.ValidatorBuilder_ViewModelMissing, nameof(WithViewModel)));
             }
 
             var validator = new Validator(_validationResultsPresenter, _properties, _viewModel, CloneWithBuildHandler);

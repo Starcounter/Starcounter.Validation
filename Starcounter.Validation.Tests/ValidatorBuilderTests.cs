@@ -39,13 +39,24 @@ namespace Starcounter.Validation.Tests
         }
 
         [Test]
-        public void ThrowsIfViewModelHasNotBeenSet()
+        public void ThrowsIfViewModelHasNotBeenSetAndPropertiesAreAdded()
         {
             _builder
-                .Invoking(builder => builder.WithResultsPresenter(_validationResultsPresenter).Build())
+                .Invoking(builder => builder.AddProperty("Name"))
                 .Should().Throw<InvalidOperationException>()
                 .WithMessage(string.Format(Strings.ValidatorBuilder_ViewModelMissing, nameof(IValidatorBuilder.WithViewModel)))
                 ;
+        }
+
+        [Test]
+        public void AllowsCreatingValidatorWithoutViewModel()
+        {
+            // such a thing could be used to group multiple sub-validators
+            _builder
+                .WithResultsPresenter(_validationResultsPresenter)
+                .Build()
+                .Invoking(validator => validator.ValidateAll())
+                .Should().NotThrow();
         }
 
         [Test]

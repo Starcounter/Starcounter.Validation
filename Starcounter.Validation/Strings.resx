@@ -130,7 +130,7 @@
     <value>Error presenter has not been set. Make sure to call {0} at least once</value>
   </data>
   <data name="ValidatorBuilder_ViewModelMissing" xml:space="preserve">
-    <value>View-model has not been set. Make sure to call {0} at least once</value>
+    <value>View-model has not been set. Make sure to call {0} before adding properties</value>
   </data>
   <data name="Validator_PropertyNeverAdded" xml:space="preserve">
     <value>Property {0} was never added to this validator</value>
