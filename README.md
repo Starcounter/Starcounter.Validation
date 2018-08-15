@@ -28,7 +28,7 @@ public class Startup: IStartup
 }
 ```
 
-If you're not using DI, you can just construct `ValidationBuilder` by hand:
+If you're not using DI, you can construct `ValidationBuilder` by hand:
 
 ```c#
 var validationBuilder = new ValidationBuilder();
@@ -62,7 +62,7 @@ public partial class DogViewModel: Json
 ```
 
 Here, the `Name` is required not to be empty, and `Breed` can't be longer than 120 characters.
-To validate this view-model, first obtain an instance of `IValidatorBuilder`. If you're using DI, just declare it in your `Init`. Otherwise just create it manually.
+To validate this view-model, first obtain an instance of `IValidatorBuilder`. If you're using DI, declare it in your `Init`. Otherwise create it manually.
 Next, you have to call `WithViewModel` to specify the view-model instance you want to validate, `WithErrorPresenter` to specify how to present the validation errors and call `AddProperty` for each property you want to validate.
 
 ```c#
@@ -88,7 +88,65 @@ public partial class DogViewModel: Json, IInitPageWithDependencies
 }
 ```
 
-Your validator is complete, you can now call its `ValidateAll()` method
+## Using IValidator
+
+The `IValidator` interface exposes two methods for validation:
+
+### Validate
+
+```c#
+bool Validate(string propertyName, object value);
+```
+
+Validates the supplied value, using rules from the specified property. Returns true if validation succeeded.
+The most common use of this would be in an input handler:
+
+```c#
+public void Handle(Input.Name input)
+{
+    // this will use ErrorPresenter to display or clear validation errors for Name
+    _validator.Validate(nameof(Name), input.Value);
+}
+```
+
+You can also use the return value to stop further processing if validation fails:
+
+```c#
+public void Handle(Input.Name input)
+{
+    // this will use ErrorPresenter to display or clear validation errors for Name
+    if(!_validator.Validate(nameof(Name), input.Value))
+    {
+        return;
+    }
+
+    // further processing
+}
+```
+
+### ValidateAll
+
+```c#
+bool ValidateAll();
+```
+
+Validates current values of all configured properties. Also calls `ValidateAll` on all the sub validators (see "Validating collections").
+Returns true if all the validation succeeded, false if any of it failed. Note that, unlike Validate, it uses actual values of the properties.
+
+This method is usually called before saving the changes or performing a major action to make sure that the view-model is valid as a whole.
+
+```c#
+public void Handle(Input.SaveTrigger input)
+{
+    // this will use ErrorPresenter to display or clear validation errors for Name
+    if(!_validator.ValidateAll())
+    {
+        return;
+    }
+
+    AttachedScope.Commit();
+}
+```
 
 ## Integrating with Starcounter.Uniform
 
