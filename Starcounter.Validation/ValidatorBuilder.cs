@@ -12,9 +12,9 @@ namespace Starcounter.Validation
     public class ValidatorBuilder : IValidatorBuilder
     {
         /// <summary>
-        /// TODO
+        /// Responds to a validator being created by a builder.
         /// </summary>
-        /// <param name="validator"></param>
+        /// <param name="validator">The newly created validator.</param>
         public delegate void ValidatorBuildHandler(IValidator validator);
 
         private static readonly MethodInfo CreateGetterMethodInfo =
