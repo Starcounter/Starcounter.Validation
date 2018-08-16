@@ -63,7 +63,7 @@ public partial class DogViewModel: Json
 
 Here, the `Name` is required not to be empty, and `Breed` can't be longer than 120 characters.
 To validate this view-model, first obtain an instance of `IValidatorBuilder`. If you're using DI, declare it in your `Init`. Otherwise create it manually.
-Next, you have to call `WithViewModel` to specify the view-model instance you want to validate, `WithErrorPresenter` to specify how to present the validation errors and call `AddProperty` for each property you want to validate.
+Next, you have to call `WithViewModel` to specify the view-model instance you want to validate, `WithResultsPresenter` to specify how to present the validation errors and call `AddProperty` for each property you want to validate.
 
 ```c#
 public partial class DogViewModel: Json, IInitPageWithDependencies
@@ -76,7 +76,7 @@ public partial class DogViewModel: Json, IInitPageWithDependencies
             .WithViewModel(this)
             .AddProperty(nameof(Name))
             .AddProperty(nameof(Breed))
-            .WithErrorPresenter(PresentErrors)
+            .WithResultsPresenter(PresentErrors)
             .Build();
     }
 
@@ -104,7 +104,7 @@ The most common use of this would be in an input handler:
 ```c#
 public void Handle(Input.Name input)
 {
-    // this will use ErrorPresenter to display or clear validation errors for Name
+    // this will use ResultsPresenter to display or clear validation errors for Name
     _validator.Validate(nameof(Name), input.Value);
 }
 ```
@@ -114,7 +114,7 @@ You can also use the return value to stop further processing if validation fails
 ```c#
 public void Handle(Input.Name input)
 {
-    // this will use ErrorPresenter to display or clear validation errors for Name
+    // this will use ResultsPresenter to display or clear validation errors for Name
     if(!_validator.Validate(nameof(Name), input.Value))
     {
         return;
@@ -138,7 +138,7 @@ This method is usually called before saving the changes or performing a major ac
 ```c#
 public void Handle(Input.SaveTrigger input)
 {
-    // this will use ErrorPresenter to display or clear validation errors for Name
+    // this will use ResultsPresenter to display or clear validation errors for Name
     if(!_validator.ValidateAll())
     {
         return;
@@ -169,7 +169,7 @@ Next, add it to your view-model:
 }
 ```
 
-And finally, use `BuildWithFormItemMetadata` instead of `WithErrorPresenter` and `Build`:
+And finally, use `BuildWithFormItemMetadata` instead of `WithResultsPresenter` and `Build`:
 
 ```c#
 public void Init(IValidationBuilder validationBuilder)
