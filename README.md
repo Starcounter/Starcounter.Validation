@@ -88,6 +88,47 @@ public partial class DogViewModel: Json, IInitPageWithDependencies
 }
 ```
 
+### ValidatorBuilder extension methods
+
+There are two extension methods defined in ValidatorBuilderExtensions:
+
+```c#
+public static IValidatorBuilder AddProperties(this IValidatorBuilder validatorBuilder, params string[] properties)
+public static IValidatorBuilder WithViewModelAndAllProperties(this IValidatorBuilder validatorBuilder, object viewModel)
+```
+
+`AddProperties` lets you add a number of properties at once:
+
+```c#
+// instead of this:
+validatorBuilder
+    .WithViewModel(this)
+    .AddProperty(nameof(Name))
+    .AddProperty(nameof(Breed));
+// you can write this:
+validatorBuilder
+    .AddProperties(nameof(Name), nameof(Breed));
+```
+
+`WithViewModelAndAllProperties` lets you set the view-model and all its public properties (but only those with at least one `ValidationAttribute` applied) in one go:
+
+```c#
+// instead of this:
+validatorBuilder
+    .WithViewModel(this)
+    .AddProperty(nameof(Name))
+    .AddProperty(nameof(Breed));
+// you can write this:
+validatorBuilder
+    .WithViewModelAndAllProperties(this);
+// (under the assumption that Name and Breed are all the public, validated properties)
+```
+
+
+
+
+
+
 ## Using IValidator
 
 The `IValidator` interface exposes two methods for validation:
