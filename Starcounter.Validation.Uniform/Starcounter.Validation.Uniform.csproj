@@ -21,10 +21,8 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="2.0.0" />
     <PackageReference Include="Microsoft.Extensions.Logging" Version="2.0.0" />
+    <PackageReference Include="Starcounter.Validation" Version="1.0.0" />
     <PackageReference Include="Starcounter.Uniform" Version="1.1.0" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Starcounter.Validation\Starcounter.Validation.csproj" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Starcounter, Version=2.0.0.0, Culture=neutral, PublicKeyToken=d2df1e81d0ca3abf">
