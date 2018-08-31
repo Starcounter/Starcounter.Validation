@@ -1,4 +1,4 @@
-# Starcounter.Validation
+﻿# Starcounter.Validation
 
 This library helps validating Starcounter view-models annotated with `ValidationAttributes`, defined in `System.ComponentModel.DataAnnotations` and custom.
 
@@ -51,22 +51,24 @@ This readme contains a small example of how you can annotate your view-model wit
 To annotate it, you have to repeat its properties in the code-behind:
 
 ```c#
-public partial class DogViewModel: Json
+public partial class DogViewModel: Json, IBound<Dog>
 {
     [Required]
-    public string Name {get; set;}
+    public string Name { get => Data.Name; set => Data.Name = value; }
 
     [MaxLength(120)]
-    public string Breed {get; set;}
+    public string Breed { get => Data.Breed; set => Data.Breed = value; }
 }
 ```
+
+⚠️ If you specify your properties only in json, you don't need to do anything to have them bound to `Data`. However, if also declare them in your code-behind, you have to explicitly bind them, as shown in the example above.
 
 Here, the `Name` is required not to be empty, and `Breed` can't be longer than 120 characters.
 To validate this view-model, first obtain an instance of `IValidatorBuilder`. If you're using DI, declare it in your `Init`. Otherwise create it manually.
 Next, you can call `WithViewModelAndAllProperties` to specify the view-model instance you want to validate and use all of its validatable properties, `WithResultsPresenter` to specify how to present the validation errors.
 
 ```c#
-public partial class DogViewModel: Json, IInitPageWithDependencies
+public partial class DogViewModel: Json, IBound<Dog>, IInitPageWithDependencies
 {
     private IValidator _validator;
 
