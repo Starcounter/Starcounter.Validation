@@ -63,7 +63,7 @@ public partial class DogViewModel: Json
 
 Here, the `Name` is required not to be empty, and `Breed` can't be longer than 120 characters.
 To validate this view-model, first obtain an instance of `IValidatorBuilder`. If you're using DI, declare it in your `Init`. Otherwise create it manually.
-Next, you have to call `WithViewModel` to specify the view-model instance you want to validate, `WithResultsPresenter` to specify how to present the validation errors and call `AddProperty` for each property you want to validate.
+Next, you can call `WithViewModelAndAllProperties` to specify the view-model instance you want to validate and use all of its validatable properties, `WithResultsPresenter` to specify how to present the validation errors.
 
 ```c#
 public partial class DogViewModel: Json, IInitPageWithDependencies
@@ -73,9 +73,7 @@ public partial class DogViewModel: Json, IInitPageWithDependencies
     public void Init(IValidatorBuilder validationBuilder)
     {
         _validator = validatorBuilder
-            .WithViewModel(this)
-            .AddProperty(nameof(Name))
-            .AddProperty(nameof(Breed))
+            .WithViewModelAndAllProperties(this)
             .WithResultsPresenter(PresentErrors)
             .Build();
     }
@@ -88,46 +86,18 @@ public partial class DogViewModel: Json, IInitPageWithDependencies
 }
 ```
 
-### ValidatorBuilder extension methods
+### Specifying a subset of properties
 
-There are two extension methods defined in ValidatorBuilderExtensions:
-
-```c#
-public static IValidatorBuilder AddProperties(this IValidatorBuilder validatorBuilder, params string[] properties)
-public static IValidatorBuilder WithViewModelAndAllProperties(this IValidatorBuilder validatorBuilder, object viewModel)
-```
-
-`AddProperties` lets you add a number of properties at once:
+Instead of calling `WithViewModelAndAllProperties(this)` you can specify view-model and properties manually:
 
 ```c#
-// instead of this:
-validatorBuilder
-    .WithViewModel(this)
-    .AddProperty(nameof(Name))
-    .AddProperty(nameof(Breed));
-// you can write this:
-validatorBuilder
-    .AddProperties(nameof(Name), nameof(Breed));
+        _validator = validatorBuilder
+            .WithViewModel(this)
+            .AddProperty(nameof(Name)) // or use ValidatorBuilderExtensions.AddProperties
+            .AddProperty(nameof(Breed))
+            .WithResultsPresenter(PresentErrors)
+            .Build();
 ```
-
-`WithViewModelAndAllProperties` lets you set the view-model and all its public properties (but only those with at least one `ValidationAttribute` applied) in one go:
-
-```c#
-// instead of this:
-validatorBuilder
-    .WithViewModel(this)
-    .AddProperty(nameof(Name))
-    .AddProperty(nameof(Breed));
-// you can write this:
-validatorBuilder
-    .WithViewModelAndAllProperties(this);
-// (under the assumption that Name and Breed are all the public, validated properties)
-```
-
-
-
-
-
 
 ## Using IValidator
 
