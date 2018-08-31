@@ -10,9 +10,9 @@ Install this library from NuGet:
 Install-Package Starcounter.Validation
 ```
 
-## Creating `IValidationBuilder`
+## Creating `IValidatorBuilder`
 
-The entry point to this library is `IValidationBuilder` interface and its implementation, `ValidationBuilder`. 
+The entry point to this library is `IValidatorBuilder` interface and its implementation, `ValidationBuilder`. 
 If you're using Dependency Injection with [Starcounter.Startup](https://github.com/Starcounter/Starcounter.Startup), simply add this feature in your `Startup` class:
 
 ```c#
@@ -70,7 +70,7 @@ public partial class DogViewModel: Json, IInitPageWithDependencies
 {
     private IValidator _validator;
 
-    public void Init(IValidationBuilder validationBuilder)
+    public void Init(IValidatorBuilder validationBuilder)
     {
         _validator = validatorBuilder
             .WithViewModel(this)
@@ -213,7 +213,7 @@ Next, add it to your view-model:
 And finally, use `BuildWithFormItemMetadata` instead of `WithResultsPresenter` and `Build`:
 
 ```c#
-public void Init(IValidationBuilder validationBuilder)
+public void Init(IValidatorBuilder validationBuilder)
 {
     _validator = validatorBuilder
         .WithViewModel(this)
