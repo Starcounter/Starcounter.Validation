@@ -247,29 +247,46 @@ public class Pack
     }
 }
 
-public partial class PackViewModel: Json, IBound<Pack>, IInitWithDependencies
+public partial class PackViewModel : Json, IBound<Pack>
 {
+    private IValidator _validator;
+
     public void Init(IValidatorBuilder validatorBuilder)
     {
         _validator = validatorBuilder
-            .WithViewModel(this)
-            .AddProperty(nameof(PackName))
+            .WithViewModelAndAllProperties(this)
             .BuildWithFormItemMetadata(out var formItemMetadata);
         FormItemMetadata = formItemMetadata;
-    
-        foreach(var dog in Data.GetMembers())
+
+        foreach (var dog in Data.GetMembers())
         {
-            PackMembers.Add().Init(dog, _validator.CreateSubValidatorBuilder())
+            AddMemberViewModel(dog);
         }
     }
 
-    [DogViewModel_json.PackMembers]
+    public void Handle(Input.AddTrigger trigger)
+    {
+        AddMemberViewModel(new Dog());
+    }
+
+    private void AddMemberViewModel(Dog dog)
+    {
+        var packMemberViewModel = new PackMemberViewModel();
+        packMemberViewModel.Init(dog, _validator.CreateSubValidatorBuilder());
+        PackMembers.Add(packMemberViewModel);
+    }
+
+    [PackViewModel_json.PackMembers]
     public partial class PackMemberViewModel : Json, IBound<Dog>
     {
         private IValidator _validator;
 
         [Required]
-        public string Name { get; set; }
+        public string Name
+        {
+            get => Data.Name;
+            set => Data.Name = value;
+        }
 
         public void Init(Dog dog, IValidatorBuilder validatorBuilder)
         {
@@ -284,30 +301,129 @@ public partial class PackViewModel: Json, IBound<Pack>, IInitWithDependencies
         }
     }
 }
-
 ```
 
 If you allow removing elements from the list, you will also need to dispose of their validators when you do that:
 
 ```c#
-public partial class PackViewModel: Json, IBound<Pack>, IInitWithDependencies
+public partial class PackViewModel : Json, IBound<Pack>
 {
     // some members omitted for brevity
+    
+    private IValidator _validator;
 
-    private void RemoveMember(PackMemberViewModel vm)
+    private void AddMemberViewModel(Dog dog)
     {
-        PackMembers.Remove(vm);
-        vm.Dispose();
+        var packMemberViewModel = new PackMemberViewModel();
+        // pass RemoveMember
+        packMemberViewModel.Init(dog, RemoveMember, _validator.CreateSubValidatorBuilder());
+        PackMembers.Add(packMemberViewModel);
     }
 
-    [DogViewModel_json.PackMembers]
+    private void RemoveMember(PackMemberViewModel packMemberViewModel)
+    {
+        packMemberViewModel.Data.Delete();
+        PackMembers.Remove(packMemberViewModel);
+        // call view-model's Dispose method, which in turn disposes of the validator
+        packMemberViewModel.Dispose();
+    }
+
+    [PackViewModel_json.PackMembers]
     public partial class PackMemberViewModel : Json, IBound<Dog>, IDisposable
     {
         private IValidator _validator;
+        private Action<PackMemberViewModel> _removeAction;
+
+        public void Init(Dog dog, Action<PackMemberViewModel> removeAction, IValidatorBuilder validatorBuilder)
+        {
+            _removeAction = removeAction;
+        }
 
         public void Dispose()
         {
-            _validator.Dispose(); // detaches this subvalidator from its parent validator. ValidateAll() will no longer validate this element
+            // Dispose will detach this sub-validator from its parent
+            // and it will no longer respond to its parent ValidateAll
+            _validator?.Dispose();
         }
     }
 }
+```
+
+The full example is presented below:
+
+```c#
+public partial class PackViewModel : Json, IBound<Pack>
+{
+    private IValidator _validator;
+
+    public void Init(IValidatorBuilder validatorBuilder)
+    {
+        _validator = validatorBuilder
+            .WithViewModelAndAllProperties(this)
+            .BuildWithFormItemMetadata(out var formItemMetadata);
+        FormItemMetadata = formItemMetadata;
+
+        foreach (var dog in Data.GetMembers())
+        {
+            AddMemberViewModel(dog);
+        }
+    }
+
+    public void Handle(Input.AddTrigger trigger)
+    {
+        AddMemberViewModel(new Dog());
+    }
+
+    private void AddMemberViewModel(Dog dog)
+    {
+        var packMemberViewModel = new PackMemberViewModel();
+        packMemberViewModel.Init(dog, RemoveMember, _validator.CreateSubValidatorBuilder());
+        PackMembers.Add(packMemberViewModel);
+    }
+
+    private void RemoveMember(PackMemberViewModel packMemberViewModel)
+    {
+        packMemberViewModel.Data.Delete();
+        PackMembers.Remove(packMemberViewModel);
+        packMemberViewModel.Dispose();
+    }
+
+    [PackViewModel_json.PackMembers]
+    public partial class PackMemberViewModel : Json, IBound<Dog>, IDisposable
+    {
+        private IValidator _validator;
+        private Action<PackMemberViewModel> _removeAction;
+
+        [Required]
+        public string Name
+        {
+            get => Data.Name;
+            set => Data.Name = value;
+        }
+
+        public void Init(Dog dog, Action<PackMemberViewModel> removeAction, IValidatorBuilder validatorBuilder)
+        {
+            Data = dog;
+            _removeAction = removeAction;
+
+            _validator = validatorBuilder
+                .WithViewModel(this)
+                .AddProperty(nameof(Name))
+                .BuildWithFormItemMetadata(out var formItemMetadata);
+            // it refers here to FormItemMetadata of PackMemberViewModel, not of PackViewModel
+            FormItemMetadata = formItemMetadata;
+        }
+
+        public void Handle(Input.RemoveTrigger trigger)
+        {
+            _removeAction(this);
+        }
+
+        public void Dispose()
+        {
+            _validator?.Dispose();
+        }
+    }
+
+}
+```
