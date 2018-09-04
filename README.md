@@ -2,9 +2,23 @@
 
 This library helps validating Starcounter view-models annotated with `ValidationAttributes`, defined in `System.ComponentModel.DataAnnotations` and custom.
 
-## Where to find it?
+## Table of contents
 
-Install this library from NuGet:
+- [Installation](#installation)
+- [Creating `IValidatorBuilder`](#creating-ivalidatorbuilder)
+- [Declaring validation rules in the view-model](#declaring-validation-rules-in-the-view-model)
+  * [Specifying a subset of properties](#specifying-a-subset-of-properties)
+- [Using IValidator](#using-ivalidator)
+  * [Validate](#validate)
+  * [ValidateAll](#validateall)
+- [Integrating with Starcounter.Uniform](#integrating-with-starcounteruniform)
+- [Validating collections](#validating-collections)
+
+<small><i><a href='http://ecotrust-canada.github.io/markdown-toc/'>Table of contents generated with markdown-toc</a></i></small>
+
+## Installation
+
+[This package is available on nuget](https://www.nuget.org/packages/Starcounter.Validation/). You can get it there. To install with CLI run:
 
 ```
 Install-Package Starcounter.Validation
