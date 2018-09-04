@@ -8,22 +8,27 @@ namespace Starcounter.Validation
     /// <summary>
     /// The default implementation of <see cref="IValidator"/>. Instances of this class are usually constructed by <see cref="ValidatorBuilder"/>
     /// </summary>
-    public class Validator : IValidator
+    public sealed class Validator : IValidator
     {
-        public delegate IValidatorBuilder ValidatorBuilderFactory(ValidatorBuilder.ValidatorBuildHandler onBuild);
+        public delegate IValidatorBuilder ValidatorBuilderFactory(ValidatorBuilder.ValidatorBuildHandler onBuild, ValidatorBuilder.ValidatorDisposeHandler onDispose);
 
         private readonly ValidationResultsPresenter _validationResultsPresenter;
         private readonly IDictionary<string, PropertyValidationData> _properties;
         private readonly List<IValidator> _subValidators = new List<IValidator>();
         private readonly object _viewModel;
         private readonly ValidatorBuilderFactory _validatorBuilderFactory;
+        private readonly ValidatorBuilder.ValidatorDisposeHandler _validatorDisposeHandler;
+
+        private bool _isDisposed = false;
 
         public Validator(ValidationResultsPresenter validationResultsPresenter,
             IDictionary<string, PropertyValidationData> properties,
             object viewModel,
-            ValidatorBuilderFactory validatorBuilderFactory)
+            ValidatorBuilderFactory validatorBuilderFactory,
+            ValidatorBuilder.ValidatorDisposeHandler validatorDisposeHandler)
         {
             _validatorBuilderFactory = validatorBuilderFactory;
+            _validatorDisposeHandler = validatorDisposeHandler;
             _viewModel = viewModel;
             _validationResultsPresenter = validationResultsPresenter;
             _properties = properties;
@@ -33,6 +38,7 @@ namespace Starcounter.Validation
         public bool Validate(string propertyName, object value)
         {
             if (propertyName == null) throw new ArgumentNullException(nameof(propertyName));
+            CheckDisposed();
             IReadOnlyCollection<ValidationAttribute> attributes;
             try
             {
@@ -49,6 +55,7 @@ namespace Starcounter.Validation
         /// <inheritdoc />
         public bool ValidateAll()
         {
+            CheckDisposed();
             var areAllPropertiesValid = true;
             foreach (var entry in _properties)
             {
@@ -66,12 +73,36 @@ namespace Starcounter.Validation
         /// <inheritdoc />
         public IValidatorBuilder CreateSubValidatorBuilder()
         {
-            return _validatorBuilderFactory(AddSubValidator);
+            CheckDisposed();
+            return _validatorBuilderFactory(AddSubValidator, RemoveSubValidator);
+        }
+
+        /// <summary>
+        /// If this instance is a sub-validator, then it gets detached from its parent.
+        /// Otherwise, nothing happens.
+        /// </summary>
+        public void Dispose()
+        {
+            _isDisposed = true;
+            _validatorDisposeHandler?.Invoke(this);
+        }
+
+        private void CheckDisposed()
+        {
+            if (_isDisposed)
+            {
+                throw new ObjectDisposedException(typeof(Validator).FullName);
+            }
         }
 
         private void AddSubValidator(IValidator validator)
         {
             _subValidators.Add(validator);
+        }
+
+        private void RemoveSubValidator(IValidator validator)
+        {
+            _subValidators.Remove(validator);
         }
 
         private bool Validate(string propertyName, object value, IReadOnlyCollection<ValidationAttribute> attributes)

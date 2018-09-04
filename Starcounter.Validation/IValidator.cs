@@ -5,7 +5,7 @@ namespace Starcounter.Validation
     /// <summary>
     /// Allows validating of Starcounter view-model and its properties. Obtain an instance with <see cref="IValidatorBuilderFactory"/>.
     /// </summary>
-    public interface IValidator
+    public interface IValidator: IDisposable
     {
         /// <summary>
         /// Validate <paramref name="value"/>, with regard to attributes of <paramref name="propertyName"/>.

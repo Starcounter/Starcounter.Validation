@@ -179,6 +179,47 @@ namespace Starcounter.Validation.Tests
         }
 
         [Test]
+        public void ValidateAllDoesntValidateDisposedSubValidator()
+        {
+            AddSubValidator();
+            // FirstName is required
+            _viewModel.FirstName = "John";
+            _subViewModel.FirstName = null;
+
+            _subValidator.Dispose();
+
+            _validator.ValidateAll()
+                .Should().BeTrue();
+        }
+
+        [Test]
+        public void ValidateThrowsWhenValidatorIsDisposed()
+        {
+            _validator.Dispose();
+
+            _validator.Invoking(v => v.Validate(nameof(TestViewModel.FirstName), null))
+                .Should().Throw<ObjectDisposedException>();
+        }
+
+        [Test]
+        public void ValidateAllThrowsWhenValidatorIsDisposed()
+        {
+            _validator.Dispose();
+
+            _validator.Invoking(v => v.ValidateAll())
+                .Should().Throw<ObjectDisposedException>();
+        }
+
+        [Test]
+        public void CreateSubValidatorThrowsWhenValidatorIsDisposed()
+        {
+            _validator.Dispose();
+
+            _validator.Invoking(v => v.CreateSubValidatorBuilder())
+                .Should().Throw<ObjectDisposedException>();
+        }
+
+        [Test]
         public void ValidatorBuilderUsesValidationAttributeAdapterIfItsPresent()
         {
             // this actually test ValidatorBuilder, but since both classes are tightly coupled,

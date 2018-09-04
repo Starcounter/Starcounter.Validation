@@ -17,12 +17,19 @@ namespace Starcounter.Validation
         /// <param name="validator">The newly created validator.</param>
         public delegate void ValidatorBuildHandler(IValidator validator);
 
+        /// <summary>
+        /// Responds to a validator being disposed.
+        /// </summary>
+        /// <param name="validator">The validator whose <see cref="IDisposable.Dispose"/> method has been called.</param>
+        public delegate void ValidatorDisposeHandler(IValidator validator);
+
         private static readonly MethodInfo CreateGetterMethodInfo =
             typeof(ValidatorBuilder)
                 .GetMethod(nameof(CreateGetter), BindingFlags.NonPublic | BindingFlags.Static);
         
         private readonly IValidationAttributeAdapter _validationAttributeAdapter;
         private readonly ValidatorBuildHandler _validatorBuildHandler;
+        private readonly ValidatorDisposeHandler _validatorDisposeHandler;
         private readonly IDictionary<string, Validator.PropertyValidationData> _properties = new Dictionary<string, Validator.PropertyValidationData>();
 
         private object _viewModel;
@@ -33,7 +40,7 @@ namespace Starcounter.Validation
         /// Constructs a new instance of <see cref="ValidatorBuilder"/>.
         /// </summary>
         /// <param name="validationAttributeAdapter">Used when scanning properties for <see cref="ValidationAttribute"/>. If this is null, no adaptation will occur.</param>
-        public ValidatorBuilder(IValidationAttributeAdapter validationAttributeAdapter = null) : this(validationAttributeAdapter, null)
+        public ValidatorBuilder(IValidationAttributeAdapter validationAttributeAdapter = null) : this(validationAttributeAdapter, null, null)
         {
         }
 
@@ -43,10 +50,14 @@ namespace Starcounter.Validation
         /// </summary>
         /// <param name="validationAttributeAdapter">Used when scanning properties for <see cref="ValidationAttribute"/>. If this is null, no adaptation will occur.</param>
         /// <param name="validatorBuildHandler">Called after <see cref="Build"/> is invoked.</param>
-        public ValidatorBuilder(IValidationAttributeAdapter validationAttributeAdapter, ValidatorBuildHandler validatorBuildHandler)
+        /// <param name="validatorDisposeHandler">Called after an <see cref="IValidator"/> created by this builder is disposed.</param>
+        public ValidatorBuilder(IValidationAttributeAdapter validationAttributeAdapter,
+            ValidatorBuildHandler validatorBuildHandler,
+            ValidatorDisposeHandler validatorDisposeHandler)
         {
             _validationAttributeAdapter = validationAttributeAdapter;
             _validatorBuildHandler = validatorBuildHandler;
+            _validatorDisposeHandler = validatorDisposeHandler;
         }
 
         /// <inheritdoc/>
@@ -122,7 +133,7 @@ namespace Starcounter.Validation
                 throw new InvalidOperationException(string.Format(Strings.ValidatorBuilder_ResultsPresenterMissing, nameof(WithResultsPresenter)));
             }
 
-            var validator = new Validator(_validationResultsPresenter, _properties, _viewModel, CloneWithBuildHandler);
+            var validator = new Validator(_validationResultsPresenter, _properties, _viewModel, CloneWithBuildHandler, _validatorDisposeHandler);
             _validatorBuildHandler?.Invoke(validator);
 
             return validator;
@@ -138,9 +149,9 @@ namespace Starcounter.Validation
             return attributes.ToList();
         }
 
-        private IValidatorBuilder CloneWithBuildHandler(ValidatorBuildHandler buildHandler)
+        private IValidatorBuilder CloneWithBuildHandler(ValidatorBuildHandler buildHandler, ValidatorDisposeHandler disposeHandler)
         {
-            return new ValidatorBuilder(_validationAttributeAdapter, buildHandler);
+            return new ValidatorBuilder(_validationAttributeAdapter, buildHandler, disposeHandler);
         }
 
         private static Func<TProperty> CreateGetter<TViewModel, TProperty>(TViewModel viewModel, PropertyInfo propertyInfo)

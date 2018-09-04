@@ -273,3 +273,27 @@ public partial class PackViewModel: Json, IBound<Pack>, IInitWithDependencies
 
 ```
 
+If you allow removing elements from the list, you will also need to dispose of their validators when you do that:
+
+```c#
+public partial class PackViewModel: Json, IBound<Pack>, IInitWithDependencies
+{
+    // some members omitted for brevity
+
+    private void RemoveMember(PackMemberViewModel vm)
+    {
+        PackMembers.Remove(vm);
+        vm.Dispose();
+    }
+
+    [DogViewModel_json.PackMembers]
+    public partial class PackMemberViewModel : Json, IBound<Dog>, IDisposable
+    {
+        private IValidator _validator;
+
+        public void Dispose()
+        {
+            _validator.Dispose(); // detaches this subvalidator from its parent validator. ValidateAll() will no longer validate this element
+        }
+    }
+}
