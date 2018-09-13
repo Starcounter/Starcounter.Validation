@@ -26,7 +26,7 @@ Install-Package Starcounter.Validation
 
 ## Creating `IValidatorBuilder`
 
-The entry point to this library is `IValidatorBuilder` interface and its implementation, `ValidationBuilder`. 
+The entry point to this library is `IValidatorBuilder` interface and its implementation, `ValidatorBuilder`. 
 If you're using Dependency Injection with [Starcounter.Startup](https://github.com/Starcounter/Starcounter.Startup), simply add this feature in your `Startup` class:
 
 ```c#
@@ -42,10 +42,10 @@ public class Startup: IStartup
 }
 ```
 
-If you're not using DI, you can construct `ValidationBuilder` by hand:
+If you're not using DI, you can construct `ValidatorBuilder` by hand:
 
 ```c#
-var validationBuilder = new ValidationBuilder();
+var validatorBuilder = new ValidatorBuilder();
 ```
 
 ## Declaring validation rules in the view-model
@@ -86,7 +86,7 @@ public partial class DogViewModel: Json, IBound<Dog>, IInitPageWithDependencies
 {
     private IValidator _validator;
 
-    public void Init(IValidatorBuilder validationBuilder)
+    public void Init(IValidatorBuilder validatorBuilder)
     {
         _validator = validatorBuilder
             .WithViewModelAndAllProperties(this)
@@ -199,7 +199,7 @@ Next, add it to your view-model:
 And finally, use `BuildWithFormItemMetadata` instead of `WithResultsPresenter` and `Build`:
 
 ```c#
-public void Init(IValidatorBuilder validationBuilder)
+public void Init(IValidatorBuilder validatorBuilder)
 {
     _validator = validatorBuilder
         .WithViewModel(this)
