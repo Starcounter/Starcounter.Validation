@@ -34,6 +34,7 @@ namespace Starcounter.Validation.Tests
 
         public const string ProtectedPropertyName = nameof(Protected);
 
+        [Range(0,10)]
         public int Age { get; set; }
     }
 }

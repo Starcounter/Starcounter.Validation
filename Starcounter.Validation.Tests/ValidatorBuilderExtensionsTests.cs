@@ -17,7 +17,8 @@ namespace Starcounter.Validation.Tests
                     nameof(TestViewModel.FirstName),
                     nameof(TestViewModel.LastName),
                     nameof(TestViewModel.Email),
-                    nameof(TestViewModel.RepeatPassword));
+                    nameof(TestViewModel.RepeatPassword),
+                    nameof(TestViewModel.Age));
             // if the view-model weren't set, ValidatorBuilder would throw exception at AddProperty
             // there is no easy way to check what view-model was set
         }

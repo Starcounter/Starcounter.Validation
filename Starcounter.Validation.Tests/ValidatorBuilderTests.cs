@@ -60,6 +60,14 @@ namespace Starcounter.Validation.Tests
         }
 
         [Test]
+        public void AllowsAddingValueTypeProperty()
+        {
+            PrepareBuilder()
+                .Invoking(builder => builder.AddProperty(nameof(TestViewModel.Age)))
+                .Should().NotThrow();
+        }
+
+        [Test]
         public void ThrowsIfErrorPresenterHasNotBeenSet()
         {
             _builder

@@ -154,7 +154,7 @@ namespace Starcounter.Validation
             return new ValidatorBuilder(_validationAttributeAdapter, buildHandler, disposeHandler);
         }
 
-        private static Func<TProperty> CreateGetter<TViewModel, TProperty>(TViewModel viewModel, PropertyInfo propertyInfo)
+        private static Func<object> CreateGetter<TViewModel, TProperty>(TViewModel viewModel, PropertyInfo propertyInfo)
         {
             var rawGetter = (Func<TViewModel, TProperty>)propertyInfo.GetMethod.CreateDelegate(typeof(Func<TViewModel, TProperty>));
             return () => rawGetter(viewModel);
