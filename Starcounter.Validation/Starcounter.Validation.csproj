@@ -10,13 +10,13 @@
     <TargetFramework>net462</TargetFramework>
     <AssemblyName>Starcounter.Validation</AssemblyName>
     <RootNamespace>Starcounter.Validation</RootNamespace>
-    <Version>1.0.0</Version>
+    <Version>1.1.1</Version>
     <Authors>Starcounter, joozek78</Authors>
     <PackageProjectUrl>https://github.com/Starcounter/Starcounter.Validation</PackageProjectUrl>
     <RepositoryUrl>https://github.com/Starcounter/Starcounter.Validation</RepositoryUrl>
     <PackageLicenseUrl>https://github.com/Starcounter/Starcounter.Validation/blob/master/LICENSE</PackageLicenseUrl>
     <Description>Validation helper library for Starcounter applications</Description>
-    <PackageReleaseNotes>Initial release
+    <PackageReleaseNotes>Fixed bug where value type properties could not be added to IValidatorBuilder
 </PackageReleaseNotes>
     <PackageTags>Starcounter</PackageTags>
   </PropertyGroup>
