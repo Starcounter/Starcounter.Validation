@@ -5,7 +5,7 @@ This library helps validating Starcounter view-models annotated with `Validation
 ## Table of contents
 
 - [Installation](#installation)
-- [Creating `IValidatorBuilder`](#creating--ivalidatorbuilder-)
+- [Creating `IValidatorBuilder`](#creating-ivalidatorbuilder)
 - [Declaring validation rules in the view-model](#declaring-validation-rules-in-the-view-model)
   * [Specifying a subset of properties](#specifying-a-subset-of-properties)
 - [Using IValidator](#using-ivalidator)
