@@ -5,13 +5,15 @@ This library helps validating Starcounter view-models annotated with `Validation
 ## Table of contents
 
 - [Installation](#installation)
-- [Creating `IValidatorBuilder`](#creating-ivalidatorbuilder)
+- [Creating `IValidatorBuilder`](#creating--ivalidatorbuilder-)
 - [Declaring validation rules in the view-model](#declaring-validation-rules-in-the-view-model)
   * [Specifying a subset of properties](#specifying-a-subset-of-properties)
 - [Using IValidator](#using-ivalidator)
   * [Validate](#validate)
   * [ValidateAll](#validateall)
 - [Integrating with Starcounter.Uniform](#integrating-with-starcounteruniform)
+- [Custom validation rules](#custom-validation-rules)
+- [Validating using services](#validating-using-services)
 - [Validating collections](#validating-collections)
 
 <small><i><a href='http://ecotrust-canada.github.io/markdown-toc/'>Table of contents generated with markdown-toc</a></i></small>
@@ -211,6 +213,39 @@ public void Init(IValidatorBuilder validatorBuilder)
 ```
 
 Note that you don't have to specify `DefaultTemplate.FormItemMetadata.InstanceType`.
+
+## Custom validation rules
+
+When possible, try to reuse existing validation attributes from the [System.ComponentModel.DataAnnotations namespace](https://docs.microsoft.com/en-gb/dotnet/api/system.componentmodel.dataannotations?view=netframework-4.7.1). However, when it's not possible, you can create your own custom validation attributes. When doing this, respect following guidelines:
+
+1. Your custom attribute class must derive from `ValidationAttribute` and its name should end with `Attribute`.
+2. You can either override `bool IsValid(object)` or `ValidationResult IsValid(object, ValidationContext)`.
+2. If the value you're validiting is null (or empty), return validation success. If your data shouldn't be null nor empty, apply `[Required]` to your properties.
+3. When returning validation errors you should return `new ValidationResult(FormatErrorMessage(validationContext.DisplayName))`. That future users of your attribute can customize the error message with `ErrorMessage`, `ErrorMessageResourceName` and `ErrorMessageResourceType`.
+
+## Validating using services
+
+When you want to use services in your custom validation attributes - including database access services like a repository - use `validationContext`, as shown below:
+
+```c#
+public class UniqueUsernameAttribute : ValidationAttribute
+{
+    protected override ValidationResult IsValid(object value, ValidationContext validationContext)
+    {
+        if (value == null) // always return success on null, it's a job for [Required]
+        {
+            return ValidationResult.Success;
+        }
+        var usersRepository = validationContext.GetRequiredService<IUsersRepository>();
+        return usersRepository.GetUserByName((string)value) == null
+            ? ValidationResult.Success
+            : new ValidationResult(FormatErrorMessage(validationContext.DisplayName));
+    }
+
+    public override bool RequiresValidationContext => true;
+}
+```
+
 
 ## Validating collections
 
