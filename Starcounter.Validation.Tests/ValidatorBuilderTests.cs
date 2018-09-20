@@ -1,5 +1,7 @@
 ﻿using System;
 using FluentAssertions;
+using Microsoft.Extensions.DependencyInjection;
+using Moq;
 using NUnit.Framework;
 
 namespace Starcounter.Validation.Tests
@@ -13,7 +15,7 @@ namespace Starcounter.Validation.Tests
         [SetUp]
         public void SetUp()
         {
-            _builder = new ValidatorBuilder();
+            _builder = new ValidatorBuilder(Mock.Of<IServiceProvider>());
             _viewModel = new TestViewModel();
             _validationResultsPresenter = ValidationResultsPresenters.NullValidationResultsPresenter;
         }

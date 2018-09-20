@@ -16,17 +16,20 @@ namespace Starcounter.Validation
         private readonly IDictionary<string, PropertyValidationData> _properties;
         private readonly List<IValidator> _subValidators = new List<IValidator>();
         private readonly object _viewModel;
+        private readonly IServiceProvider _serviceProvider;
         private readonly ValidatorBuilderFactory _validatorBuilderFactory;
         private readonly ValidatorBuilder.ValidatorDisposeHandler _validatorDisposeHandler;
 
         private bool _isDisposed = false;
 
-        public Validator(ValidationResultsPresenter validationResultsPresenter,
+        public Validator(IServiceProvider serviceProvider,
+            ValidationResultsPresenter validationResultsPresenter,
             IDictionary<string, PropertyValidationData> properties,
             object viewModel,
             ValidatorBuilderFactory validatorBuilderFactory,
             ValidatorBuilder.ValidatorDisposeHandler validatorDisposeHandler)
         {
+            _serviceProvider = serviceProvider;
             _validatorBuilderFactory = validatorBuilderFactory;
             _validatorDisposeHandler = validatorDisposeHandler;
             _viewModel = viewModel;
@@ -109,8 +112,9 @@ namespace Starcounter.Validation
         {
             var validationContext = new ValidationContext(_viewModel)
             {
-                MemberName = propertyName
+                MemberName = propertyName,
             };
+            validationContext.InitializeServiceProvider(_serviceProvider.GetService);
             var errors = attributes
                     .Select(att => att.GetValidationResult(value, validationContext))
                     .Where(result => result != ValidationResult.Success)
