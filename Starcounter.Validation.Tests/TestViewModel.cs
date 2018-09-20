@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace Starcounter.Validation.Tests
@@ -20,6 +21,7 @@ namespace Starcounter.Validation.Tests
         [EmailAddress(ErrorMessage = EmailAddressErrorMessage)]
         public string Email { get; set; }
 
+        [CompareToProvidedString]
         public string Password { get; set; }
 
         [Compare(nameof(Password), ErrorMessage = RepeatPasswordErrorMessage)]

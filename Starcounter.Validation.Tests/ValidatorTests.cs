@@ -18,6 +18,7 @@ namespace Starcounter.Validation.Tests
         private TestViewModel _subViewModel;
         private IDictionary<string, List<string>> _presentedSubValidatorErrors;
         private IValidator _subValidator;
+        private Mock<IServiceProvider> _serviceProviderMock;
 
         [SetUp]
         public void SetUp()
@@ -26,7 +27,8 @@ namespace Starcounter.Validation.Tests
             _subViewModel = new TestViewModel();
             _presentedErrors = new Dictionary<string, List<string>>();
             _presentedSubValidatorErrors = new Dictionary<string, List<string>>();
-            _validator = SetupValidatorBuilder(new ValidatorBuilder())
+            _serviceProviderMock = new Mock<IServiceProvider>();
+            _validator = SetupValidatorBuilder(new ValidatorBuilder(_serviceProviderMock.Object))
                 .Build();
         }
 
@@ -58,7 +60,6 @@ namespace Starcounter.Validation.Tests
         [Test]
         public void ValidateHandlesAttributesUsingValidationContext()
         {
-            // FirstName is Required
             _viewModel.Password = "password";
             var propertyName = nameof(TestViewModel.RepeatPassword);
             var validationResult = _validator.Validate(propertyName, "repeat password");
@@ -67,6 +68,23 @@ namespace Starcounter.Validation.Tests
             {
                 validationResult.Should().BeFalse();
                 AssertErrorsContain(propertyName, TestViewModel.RepeatPasswordErrorMessage);
+            }
+        }
+
+        [Test]
+        public void ValidatePassesServiceProviderToValidationContext()
+        {
+            var stringInProvider = "qwerty";
+            _serviceProviderMock
+                .Setup(provider => provider.GetService(typeof(string)))
+                .Returns(stringInProvider);
+
+            var propertyName = nameof(TestViewModel.Password);
+            var validationResult = _validator.Validate(propertyName, stringInProvider);
+
+            using (new AssertionScope())
+            {
+                validationResult.Should().BeTrue();
             }
         }
 
@@ -97,12 +115,6 @@ namespace Starcounter.Validation.Tests
                 validationResult.Should().BeTrue();
                 AssertErrorsAreCleared(propertyName);
             }
-        }
-
-        private void AssertErrorsAreCleared(string propertyName)
-        {
-            _presentedErrors.Should().ContainKey(propertyName)
-                .WhichValue.Should().BeEmpty();
         }
 
         [Test]
@@ -226,7 +238,7 @@ namespace Starcounter.Validation.Tests
             // its easier to test it here. They could be decoupled, but that would require
             // a new interface, IValidatorFactory which would otherwise not make much sense
             var newErrorMessage = "error";
-            var validator = SetupValidatorBuilder(new ValidatorBuilder(CreateAdapterReplacingErrorMessage(newErrorMessage)))
+            var validator = SetupValidatorBuilder(new ValidatorBuilder(Mock.Of<IServiceProvider>(), CreateAdapterReplacingErrorMessage(newErrorMessage)))
                 .Build();
             var propertyName = nameof(TestViewModel.FirstName);
 
@@ -262,12 +274,19 @@ namespace Starcounter.Validation.Tests
                 .WhichValue.Should().Contain(error);
         }
 
+        private void AssertErrorsAreCleared(string propertyName)
+        {
+            _presentedErrors.Should().ContainKey(propertyName)
+                .WhichValue.Should().BeEmpty();
+        }
+
         private IValidatorBuilder SetupValidatorBuilder(IValidatorBuilder builder)
         {
             return builder
                 .WithViewModel(_viewModel)
                 .WithResultsPresenter((name, errors) => _presentedErrors.Add(name, errors.ToList()))
                 .AddProperty(nameof(TestViewModel.FirstName))
+                .AddProperty(nameof(TestViewModel.Password))
                 .AddProperty(nameof(TestViewModel.RepeatPassword))
                 .AddProperty(nameof(TestViewModel.Email));
         }

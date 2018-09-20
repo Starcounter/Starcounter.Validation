@@ -1,4 +1,7 @@
-﻿using FluentAssertions;
+﻿using System;
+using FluentAssertions;
+using Microsoft.Extensions.DependencyInjection;
+using Moq;
 using NUnit.Framework;
 
 namespace Starcounter.Validation.Tests
@@ -10,13 +13,14 @@ namespace Starcounter.Validation.Tests
         {
             var viewModel = new TestViewModel();
 
-            new ValidatorBuilder()
+            new ValidatorBuilder(Mock.Of<IServiceProvider>())
                 .WithViewModelAndAllProperties(viewModel)
                 .Properties
                 .Should().BeEquivalentTo(
                     nameof(TestViewModel.FirstName),
                     nameof(TestViewModel.LastName),
                     nameof(TestViewModel.Email),
+                    nameof(TestViewModel.Password),
                     nameof(TestViewModel.RepeatPassword),
                     nameof(TestViewModel.Age));
             // if the view-model weren't set, ValidatorBuilder would throw exception at AddProperty
