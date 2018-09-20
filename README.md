@@ -221,7 +221,7 @@ When possible, try to reuse existing validation attributes from the [System.Comp
 1. Your custom attribute class must derive from `ValidationAttribute` and its name should end with `Attribute`.
 2. You can either override `bool IsValid(object)` or `ValidationResult IsValid(object, ValidationContext)`.
 2. If the value you're validiting is null (or empty), return validation success. If your data shouldn't be null nor empty, apply `[Required]` to your properties.
-3. When returning validation errors you should return `new ValidationResult(FormatErrorMessage(validationContext.DisplayName))`. That future users of your attribute can customize the error message with `ErrorMessage`, `ErrorMessageResourceName` and `ErrorMessageResourceType`.
+3. When returning validation errors you should return `new ValidationResult(FormatErrorMessage(validationContext.DisplayName))`. That way future users of your attribute can customize the error message with `ErrorMessage`, `ErrorMessageResourceName` and `ErrorMessageResourceType`.
 
 ## Validating using services
 
