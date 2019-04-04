@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>$id$</id>
+    <version>$version$</version>
+    <title>$title$</title>
+    <authors>Starcounter, joozek78</authors>
+    <owners>Starcounter, StarcounterWarpech</owners>
+    <licenseUrl>https://github.com/Starcounter/Starcounter.Validation/blob/master/LICENSE</licenseUrl>
+    <projectUrl>https://github.com/Starcounter/Starcounter.Validation</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Validation helper library for Starcounter applications.</description>
+    <releaseNotes>Update and upgrade NuGet packages.</releaseNotes>
+    <copyright>Copyright 2019</copyright>
+    <tags>Starcounter, Validation</tags>
+  </metadata>
+</package>
