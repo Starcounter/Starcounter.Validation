@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>$id$</id>
+    <version>$version$</version>
+    <title>$title$</title>
+    <authors>Starcounter, joozek78</authors>
+    <owners>Starcounter, StarcounterWarpech</owners>
+    <licenseUrl>https://github.com/Starcounter/Starcounter.Validation/blob/master/LICENSE</licenseUrl>
+    <projectUrl>https://github.com/Starcounter/Starcounter.Validation</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Integration between Starcounter.Validation and Starcounter.Uniform libraries.</description>
+    <releaseNotes>Updated Starcounter.Uniform reference to 2.4.0.</releaseNotes>
+    <copyright>Copyright 2019</copyright>
+    <tags>Starcounter, Validation, Uniform</tags>
+  </metadata>
+</package>
