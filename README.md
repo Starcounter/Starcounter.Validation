@@ -26,6 +26,9 @@ This library helps validating Starcounter view-models annotated with `Validation
 Install-Package Starcounter.Validation
 ```
 
+## Requirements
+Requires Starcounter 2.4.0.7243 or later and .NET Framework 4.6.2.
+
 ## Creating `IValidatorBuilder`
 
 The entry point to this library is `IValidatorBuilder` interface and its implementation, `ValidatorBuilder`. 
