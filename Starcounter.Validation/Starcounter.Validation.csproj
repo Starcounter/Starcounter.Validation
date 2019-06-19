@@ -10,7 +10,7 @@
     <TargetFramework>net462</TargetFramework>
     <AssemblyName>Starcounter.Validation</AssemblyName>
     <RootNamespace>Starcounter.Validation</RootNamespace>
-    <Version>2.0.0</Version>
+    <Version>2.1.0</Version>
     <Authors>Starcounter, joozek78</Authors>
     <PackageProjectUrl>https://github.com/Starcounter/Starcounter.Validation</PackageProjectUrl>
     <RepositoryUrl>https://github.com/Starcounter/Starcounter.Validation</RepositoryUrl>
